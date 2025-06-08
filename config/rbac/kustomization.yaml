@@ -1,0 +1,4 @@
+resources:
+- bases/cluster_role.yaml
+- bases/cluster_role_binding.yaml
+- bases/service_account.yaml

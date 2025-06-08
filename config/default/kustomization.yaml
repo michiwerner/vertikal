@@ -1,0 +1,66 @@
+# Adds namespace to all resources.
+namespace: vertikal-system
+
+# Value of this field is prepended to the
+# names of all resources, e.g. a deployment named
+# "wordpress" becomes "alices-wordpress".
+# Note that it should also match with the prefix (text before '-') of the namespace
+# field above.
+namePrefix: vertikal-
+
+# Labels to add to all resources and selectors.
+commonLabels:
+  app.kubernetes.io/name: vertikal
+  app.kubernetes.io/instance: vertikal
+  app.kubernetes.io/part-of: vertikal
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/created-by: vertikal
+
+resources:
+- ../crd
+- ../rbac
+- ../manager
+
+# Uncomment the following patches if you need to enable additional features
+# patchesStrategicMerge:
+# Protect the /metrics endpoint by putting it behind auth.
+# - manager_auth_proxy_patch.yaml
+
+# Mount the controller config file for loading manager configurations
+# - manager_config_patch.yaml
+
+# [WEBHOOK] To enable webhook
+# - manager_webhook_patch.yaml
+
+# [CERTMANAGER] To enable cert-manager
+# - webhookcainjection_patch.yaml
+
+# Uncomment the following vars if you need to enable additional features
+# vars:
+# [CERTMANAGER] To enable cert-manager
+# - name: CERTIFICATE_NAMESPACE
+#   objref:
+#     kind: Certificate
+#     group: cert-manager.io
+#     version: v1
+#     name: serving-cert
+#   fieldref:
+#     fieldpath: metadata.namespace
+# - name: CERTIFICATE_NAME
+#   objref:
+#     kind: Certificate
+#     group: cert-manager.io
+#     version: v1
+#     name: serving-cert
+# - name: SERVICE_NAMESPACE
+#   objref:
+#     kind: Service
+#     version: v1
+#     name: webhook-service
+#   fieldref:
+#     fieldpath: metadata.namespace
+# - name: SERVICE_NAME
+#   objref:
+#     kind: Service
+#     version: v1
+#     name: webhook-service

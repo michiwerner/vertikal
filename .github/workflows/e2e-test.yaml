@@ -1,0 +1,54 @@
+name: E2E Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: [basic, scaling, deletion, go]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Install dependencies
+      run: |
+        go mod download
+
+    - name: Setup e2e cluster
+      run: |
+        make e2e-setup
+
+    - name: Run e2e test - ${{ matrix.test-type }}
+      run: |
+        make e2e-test-${{ matrix.test-type }}
+
+    - name: Teardown e2e cluster
+      if: always()
+      run: |
+        make e2e-teardown
+
+  e2e-full-suite:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Install dependencies
+      run: |
+        go mod download
+
+    - name: Run complete e2e suite
+      run: |
+        make e2e-suite
