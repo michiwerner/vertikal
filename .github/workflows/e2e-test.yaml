@@ -6,7 +6,8 @@ on:
 
 jobs:
   e2e-test:
-    runs-on: ubuntu-latest    strategy:
+    runs-on: ubuntu-latest
+    strategy:
       matrix:
         test-type: [basic, scaling, deletion, go]
     steps:
@@ -55,12 +56,11 @@ jobs:
       run: |
         make e2e-test-${{ matrix.test-type }}
       env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
-
-    - name: Teardown e2e cluster
+        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}    - name: Teardown e2e cluster
       if: always()
       run: |
         make e2e-teardown
+
   e2e-full-suite:
     runs-on: ubuntu-latest
     steps:
