@@ -1,4 +1,4 @@
-apiVersion: vertikal.naptime.dev/v1alpha1
+apiVersion: vertikal.werner.io/v1alpha1
 kind: VertikalApp
 metadata:
   name: example-app

@@ -86,7 +86,7 @@ run_scaling_test() {
     
     # Apply initial VertikalApp
     cat <<EOF | kubectl apply -f -
-apiVersion: vertikal.naptime.dev/v1alpha1
+apiVersion: vertikal.werner.io/v1alpha1
 kind: VertikalApp
 metadata:
   name: test-scale-app
@@ -103,7 +103,7 @@ EOF
     # Scale up
     log "Scaling up to 3 replicas..."
     cat <<EOF | kubectl apply -f -
-apiVersion: vertikal.naptime.dev/v1alpha1
+apiVersion: vertikal.werner.io/v1alpha1
 kind: VertikalApp
 metadata:
   name: test-scale-app
@@ -140,7 +140,7 @@ run_deletion_test() {
     
     # Apply VertikalApp
     cat <<EOF | kubectl apply -f -
-apiVersion: vertikal.naptime.dev/v1alpha1
+apiVersion: vertikal.werner.io/v1alpha1
 kind: VertikalApp
 metadata:
   name: test-delete-app

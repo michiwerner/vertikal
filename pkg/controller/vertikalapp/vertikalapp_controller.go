@@ -37,7 +37,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	vertikalv1alpha1 "github.com/naptime-dev/vertikal/api/v1alpha1"
+	vertikalv1alpha1 "github.com/michiwerner/vertikal/api/v1alpha1"
 )
 
 // VertikalAppReconciler reconciles a VertikalApp object
@@ -46,9 +46,9 @@ type VertikalAppReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=vertikal.naptime.dev,resources=vertikalapps,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=vertikal.naptime.dev,resources=vertikalapps/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=vertikal.naptime.dev,resources=vertikalapps/finalizers,verbs=update
+//+kubebuilder:rbac:groups=vertikal.werner.io,resources=vertikalapps,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=vertikal.werner.io,resources=vertikalapps/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=vertikal.werner.io,resources=vertikalapps/finalizers,verbs=update
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch

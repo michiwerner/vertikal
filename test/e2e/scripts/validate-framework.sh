@@ -133,7 +133,7 @@ validate_project_structure() {
     local required_files=(
         "Makefile"
         "go.mod"
-        "config/crd/bases/vertikal.naptime.dev_vertikalapps.yaml"
+        "config/crd/bases/vertikal.werner.io_vertikalapps.yaml"
         "cmd/manager/main.go"
         "pkg/controller/vertikalapp/vertikalapp_controller.go"
         "test/e2e/kind-config.yaml"

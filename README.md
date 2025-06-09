@@ -27,7 +27,7 @@ Vertikal provides a custom resource definition (CRD) called `VertikalApp` that a
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/naptime-dev/vertikal.git
+git clone https://github.com/michiwerner/vertikal.git
 cd vertikal
 ```
 
@@ -48,7 +48,7 @@ make deploy
 1. Create a `VertikalApp` custom resource:
 
 ```yaml
-apiVersion: vertikal.naptime.dev/v1alpha1
+apiVersion: vertikal.werner.io/v1alpha1
 kind: VertikalApp
 metadata:
   name: example-app

@@ -5,7 +5,7 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - vertikal.naptime.dev
+  - vertikal.werner.io
   resources:
   - vertikalapps
   verbs:
@@ -14,16 +14,14 @@ rules:
   - get
   - list
   - patch
-  - update
-  - watch
+  - update  - watch
 - apiGroups:
-  - vertikal.naptime.dev
+  - vertikal.werner.io
   resources:
   - vertikalapps/finalizers
-  verbs:
-  - update
+  verbs:  - update
 - apiGroups:
-  - vertikal.naptime.dev
+  - vertikal.werner.io
   resources:
   - vertikalapps/status
   verbs:

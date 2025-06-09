@@ -120,7 +120,7 @@ install_crds() {
     make install
     
     # Verify CRDs are installed
-    kubectl get crd vertikalapps.vertikal.naptime.dev
+    kubectl get crd vertikalapps.vertikal.werner.io
     
     log "CRDs installed successfully"
 }

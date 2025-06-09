@@ -129,7 +129,7 @@ create_vertikalapp_manifest() {
     local port="${5:-80}"
     
     cat <<EOF
-apiVersion: vertikal.naptime.dev/v1alpha1
+apiVersion: vertikal.werner.io/v1alpha1
 kind: VertikalApp
 metadata:
   name: $name

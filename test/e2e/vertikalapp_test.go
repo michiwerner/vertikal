@@ -33,7 +33,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	vertikalv1alpha1 "github.com/naptime-dev/vertikal/api/v1alpha1"
+	vertikalv1alpha1 "github.com/michiwerner/vertikal/api/v1alpha1"
 )
 
 func TestVertikalApp(t *testing.T) {
