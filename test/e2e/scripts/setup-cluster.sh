@@ -35,12 +35,16 @@ check_dependencies() {
 detect_and_setup_node_provider() {
     log "Detecting and setting up container runtime for kind..."
     
-    # Let kind auto-detect the provider by not specifying any flags
-    # kind automatically chooses between docker and podman based on availability
-    
-    if command -v docker &> /dev/null && docker info &> /dev/null; then
-        log "Docker detected and running - kind will use Docker"
-        export KIND_EXPERIMENTAL_PROVIDER=""  # Use default detection
+    # Check what's actually running - Docker or Podman
+    if command -v docker &> /dev/null; then
+        # Check if it's real Docker or Podman emulating Docker
+        if docker info 2>&1 | grep -q "podman"; then
+            log "Podman detected (emulating Docker) - kind will use Podman"
+            export KIND_EXPERIMENTAL_PROVIDER="podman"
+        else
+            log "Docker detected and running - kind will use Docker"
+            unset KIND_EXPERIMENTAL_PROVIDER
+        fi
     elif command -v podman &> /dev/null; then
         log "Podman detected - kind will use Podman"
         export KIND_EXPERIMENTAL_PROVIDER="podman"

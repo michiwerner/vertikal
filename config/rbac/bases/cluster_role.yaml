@@ -14,12 +14,14 @@ rules:
   - get
   - list
   - patch
-  - update  - watch
+  - update
+  - watch
 - apiGroups:
   - vertikal.werner.io
   resources:
   - vertikalapps/finalizers
-  verbs:  - update
+  verbs:
+  - update
 - apiGroups:
   - vertikal.werner.io
   resources:

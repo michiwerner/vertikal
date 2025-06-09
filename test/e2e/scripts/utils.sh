@@ -45,10 +45,13 @@ wait_for_resource() {
     
     log "Waiting for $resource to be $condition (timeout: $timeout)..."
     
-    if [[ "$namespace" != "default" ]]; then
-        kubectl wait --for=condition="$condition" --timeout="$timeout" "$resource" -n "$namespace"
+    # Handle special case for nodes (which don't have a namespace)
+    if [[ "$resource" == "nodes" ]]; then
+        kubectl wait --for=condition="$condition" --timeout="$timeout" "$resource" --all
+    elif [[ "$namespace" != "default" ]]; then
+        kubectl wait --for=condition="$condition" --timeout="$timeout" "$resource" -n "$namespace" --all
     else
-        kubectl wait --for=condition="$condition" --timeout="$timeout" "$resource"
+        kubectl wait --for=condition="$condition" --timeout="$timeout" "$resource" --all
     fi
 }
 
