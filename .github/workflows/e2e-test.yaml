@@ -1,3 +1,4 @@
+---
 name: E2E Tests
 
 on:
@@ -11,93 +12,102 @@ jobs:
       matrix:
         test-type: [basic, scaling, deletion, go]
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Fix script permissions
-      run: |
-        chmod +x test/e2e/scripts/*.sh    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
+      - name: Fix script permissions
+        run: |
+          chmod +x test/e2e/scripts/*.sh
 
-    - name: Install dependencies
-      run: |
-        go mod download
-        
-    - name: Install kind and kubectl
-      run: |
-        # Install kind
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
-        chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install dependencies
+        run: |
+          go mod download
+
+      - name: Install kind and kubectl
+        run: |
+          # Install kind
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+
           # Install kubectl
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        chmod +x kubectl
-        sudo mv kubectl /usr/local/bin/kubectl    - name: Build Docker image for kind
-      run: |
-        # Build the controller image using the dedicated script
-        make e2e-build-image
-      env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
-        FORCE_REBUILD: true
+          STABLE=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+          KUBECTL_URL="https://dl.k8s.io/release/${STABLE}/bin/linux/amd64/kubectl"
+          curl -LO "${KUBECTL_URL}"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/kubectl
 
-    - name: Setup e2e cluster
-      run: |
-        make e2e-setup
-      env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+      - name: Build Docker image for kind
+        run: |
+          # Build the controller image using the dedicated script
+          make e2e-build-image
+        env:
+          CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+          FORCE_REBUILD: true
 
-    - name: Run e2e test - ${{ matrix.test-type }}
-      run: |
-        make e2e-test-${{ matrix.test-type }}
-      env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+      - name: Setup e2e cluster
+        run: |
+          make e2e-setup
+        env:
+          CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
 
-    - name: Teardown e2e cluster
-      if: always()
-      run: |
-        make e2e-teardown
+      - name: Run e2e test - ${{ matrix.test-type }}
+        run: |
+          make e2e-test-${{ matrix.test-type }}
+        env:
+          CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+
+      - name: Teardown e2e cluster
+        if: always()
+        run: |
+          make e2e-teardown
 
   e2e-full-suite:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Fix script permissions
-      run: |
-        chmod +x test/e2e/scripts/*.sh
+      - name: Fix script permissions
+        run: |
+          chmod +x test/e2e/scripts/*.sh
 
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
 
-    - name: Install dependencies
-      run: |
-        go mod download
-        
-    - name: Install kind and kubectl
-      run: |
-        # Install kind
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
-        chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
-        
-        # Install kubectl
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        chmod +x kubectl
-        sudo mv kubectl /usr/local/bin/kubectl
+      - name: Install dependencies
+        run: |
+          go mod download
 
-    - name: Build Docker image for kind
-      run: |
-        # Build the controller image using the dedicated script
-        make e2e-build-image
-      env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
-        FORCE_REBUILD: true
+      - name: Install kind and kubectl
+        run: |
+          # Install kind
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
 
-    - name: Run complete e2e suite
-      run: |
-        make e2e-suite
-      env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+          # Install kubectl
+          STABLE=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+          KUBECTL_URL="https://dl.k8s.io/release/${STABLE}/bin/linux/amd64/kubectl"
+          curl -LO "${KUBECTL_URL}"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/kubectl
+
+      - name: Build Docker image for kind
+        run: |
+          # Build the controller image using the dedicated script
+          make e2e-build-image
+        env:
+          CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+          FORCE_REBUILD: true
+
+      - name: Run complete e2e suite
+        run: |
+          make e2e-suite
+        env:
+          CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
