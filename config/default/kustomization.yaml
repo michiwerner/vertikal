@@ -17,6 +17,7 @@ commonLabels:
   app.kubernetes.io/created-by: vertikal
 
 resources:
+- namespace.yaml
 - ../crd
 - ../rbac
 - ../manager

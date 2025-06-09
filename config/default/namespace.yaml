@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vertikal-system
+  labels:
+    app.kubernetes.io/name: vertikal
+    app.kubernetes.io/instance: vertikal
+    app.kubernetes.io/part-of: vertikal
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: vertikal 
