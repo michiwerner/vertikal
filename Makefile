@@ -39,11 +39,11 @@ help: ## Display this help.
 
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
-	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	"$(CONTROLLER_GEN)" rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
 .PHONY: generate
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
-	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
+	"$(CONTROLLER_GEN)" object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -55,7 +55,11 @@ vet: ## Run go vet against code.
 
 .PHONY: test
 test: manifests generate fmt vet envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path)" go test ./... -coverprofile cover.out
+	KUBEBUILDER_ASSETS="$(shell "$(ENVTEST)" use $(ENVTEST_K8S_VERSION) --bin-dir "$(LOCALBIN)" -p path)" go test ./api/... ./cmd/... ./pkg/... -coverprofile cover.out
+
+.PHONY: test-e2e-unit
+test-e2e-unit: envtest ## Run e2e unit tests (requires kubeconfig).
+	KUBEBUILDER_ASSETS="$(shell "$(ENVTEST)" use $(ENVTEST_K8S_VERSION) --bin-dir "$(LOCALBIN)" -p path)" go test ./test/e2e/... -coverprofile cover-e2e.out
 
 ##@ Build
 
@@ -79,6 +83,14 @@ docker-push: ## Push docker image with the manager.
 	docker push ${IMG}
 
 ##@ E2E Testing
+
+.PHONY: e2e-build-image
+e2e-build-image: ## Build controller image for e2e testing
+	./test/e2e/scripts/build-image.sh
+
+.PHONY: e2e-build-image-force
+e2e-build-image-force: ## Force rebuild controller image for e2e testing
+	FORCE_REBUILD=true ./test/e2e/scripts/build-image.sh
 
 .PHONY: e2e-setup
 e2e-setup: ## Setup e2e test cluster
@@ -152,6 +164,10 @@ e2e-suite-full: ## Run complete e2e suite including advanced tests
 e2e-help: ## Show e2e testing help
 	@echo "E2E Testing Commands:"
 	@echo "====================="
+	@echo "Image building:"
+	@echo "  make e2e-build-image       # Build controller image (smart rebuild)"
+	@echo "  make e2e-build-image-force # Force rebuild controller image"
+	@echo ""
 	@echo "Basic workflow:"
 	@echo "  make e2e-setup          # Setup test cluster"
 	@echo "  make e2e-test-basic     # Run basic tests"
@@ -223,7 +239,7 @@ ENVTEST := $(LOCALBIN)/setup-envtest
 
 ## Tool Versions
 KUSTOMIZE_VERSION ?= v5.0.1
-CONTROLLER_TOOLS_VERSION ?= v0.13.0
+CONTROLLER_TOOLS_VERSION ?= v0.16.1
 
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 .PHONY: kustomize

@@ -103,9 +103,9 @@ wait_for_cluster() {
 build_and_load_image() {
     log "Building and loading controller image..."
     
-    # Build the controller image
-    log "Building image: $CONTROLLER_IMAGE"
-    make docker-build IMG="$CONTROLLER_IMAGE"
+    # Build the image using the dedicated build script
+    log "Building image using build-image.sh..."
+    "$SCRIPT_DIR/build-image.sh"
     
     # Load the image into kind cluster
     log "Loading image into kind cluster..."
