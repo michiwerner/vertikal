@@ -4,7 +4,8 @@ on:
   push:
   pull_request:
 
-jobs:  e2e-test:
+jobs:
+  e2e-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -14,12 +15,12 @@ jobs:  e2e-test:
 
     - name: Fix script permissions
       run: |
-        chmod +x test/e2e/scripts/*.sh
-
-    - name: Set up Go
+        chmod +x test/e2e/scripts/*.sh    - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.24'    - name: Install dependencies
+        go-version: '1.24'
+
+    - name: Install dependencies
       run: |
         go mod download
         
@@ -32,9 +33,7 @@ jobs:  e2e-test:
           # Install kubectl
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         chmod +x kubectl
-        sudo mv kubectl /usr/local/bin/kubectl
-
-    - name: Build Docker image for kind
+        sudo mv kubectl /usr/local/bin/kubectl    - name: Build Docker image for kind
       run: |
         # Build the controller image using the dedicated script
         make e2e-build-image
@@ -58,6 +57,7 @@ jobs:  e2e-test:
       if: always()
       run: |
         make e2e-teardown
+
   e2e-full-suite:
     runs-on: ubuntu-latest
     steps:
