@@ -50,13 +50,13 @@ jobs:
       run: |
         make e2e-setup
       env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
-
-    - name: Run e2e test - ${{ matrix.test-type }}
+        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}    - name: Run e2e test - ${{ matrix.test-type }}
       run: |
         make e2e-test-${{ matrix.test-type }}
       env:
-        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}    - name: Teardown e2e cluster
+        CONTROLLER_IMAGE: controller:e2e-${{ github.sha }}
+
+    - name: Teardown e2e cluster
       if: always()
       run: |
         make e2e-teardown
